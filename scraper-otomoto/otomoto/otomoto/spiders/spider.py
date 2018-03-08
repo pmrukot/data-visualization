@@ -13,7 +13,11 @@ class OtomotoSpider(scrapy.Spider):
 
     def parse(self, response):
         selector = scrapy.Selector(response)
+        offers = selector.xpath('//*[@id="body-container"]//h2[@class="offer-title"]/a/@href')
+        offers_urls = offers.extract()
 
+        for url in offers_urls:
+            yield scrapy.Request(url, callback=self.parse_offer, meta={'url': url})
 
     def parse_offer(self, response):
         pass
